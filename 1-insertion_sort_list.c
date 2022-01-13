@@ -1,56 +1,48 @@
 #include "sort.h"
-/**
- * swap - swap 2 element in an list
- * @head: head of list
- * @a: node
- * @b: node
- */
-void swap(listint_t *a, listint_t *b, listint_t **head)
-{
-	listint_t *aux1 = NULL, *aux2 = NULL;
 
-	if (a == NULL || b == NULL)
-		return;
-	aux1 = a->prev;
-	aux2 = b->next;
-	/* if nodes are adjacent*/
-	if (aux1)
-		aux1->next = b;
-	if (aux2)
-		aux2->prev = a;
-	a->next = aux2;
-	a->prev = b;
-	b->next = a;
-	b->prev = aux1;
-	if (aux1 == NULL)
-		*head = b;
-}
 /**
- * insertion_sort_list  - sorts a doubly linked list Insertion sort
- * @list: doubly liked list
+ * swap_nodes - Swap two nodes in a listint_t doubly-linked list.
+ * @h: A pointer to the head of the doubly-linked list.
+ * @n1: A pointer to the first node to swap.
+ * @n2: The second node to swap.
+ */
+void swap_nodes(listint_t **h, listint_t **n1, listint_t *n2)
+{
+	(*n1)->next = n2->next;
+	if (n2->next != NULL)
+		n2->next->prev = *n1;
+	n2->prev = (*n1)->prev;
+	n2->next = *n1;
+	if ((*n1)->prev != NULL)
+		(*n1)->prev->next = n2;
+	else
+		*h = n2;
+	(*n1)->prev = n2;
+	*n1 = n2->prev;
+}
+
+/**
+ * insertion_sort_list - Sorts a doubly linked list of integers
+ *                       using the insertion sort algorithm.
+ * @list: A pointer to the head of a doubly-linked list of integers.
  *
+ * Description: Prints the list after each swap.
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *head, *prev;
-	int value;
+	listint_t *iter, *insert, *tmp;
 
-	if (list == NULL || (*list)->next == NULL || (*list) == NULL)
-	{
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
-	}
-	head = *list;
-	while (head)
-	{
-		prev = head->prev;
-				value = head->n;
 
-		while (prev && prev->n > value)
+	for (iter = (*list)->next; iter != NULL; iter = tmp)
+	{
+		tmp = iter->next;
+		insert = iter->prev;
+		while (insert != NULL && iter->n < insert->n)
 		{
-			swap(prev, head, list);
-			print_list(*list);
-			prev = head->prev;
+			swap_nodes(list, &insert, iter);
+			print_list((const listint_t *)*list);
 		}
-		head = head->next;
 	}
 }

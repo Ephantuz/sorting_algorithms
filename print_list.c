@@ -1,13 +1,23 @@
+#include <stdio.h>
+#include "sort.h"
+
 /**
- * struct listint_s - Doubly linked list node
+ * print_list - Prints a list of integers
  *
- * @n: Integer stored in the node
- * @prev: Pointer to the previous element of the list
- * @next: Pointer to the next element of the list
+ * @list: The list to be printed
  */
-typedef struct listint_s
+void print_list(const listint_t *list)
 {
-    const int n;
-    struct listint_s *prev;
-    struct listint_s *next;
-} listint_t;
+	int i;
+
+	i = 0;
+	while (list)
+	{
+		if (i > 0)
+			printf(", ");
+		printf("%d", list->n);
+		++i;
+		list = list->next;
+	}
+	printf("\n");
+}
